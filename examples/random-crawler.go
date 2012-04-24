@@ -1,12 +1,12 @@
 package main
 
-import "twitter"
+import "github.com/johanwestin/go-twitter"
 import "fmt"
 import "time"
 import "math/rand"
 
-const kMaxDepth = 25
-const kStart = "jacob_winn"
+const kMaxDepth = 5
+const kStart = "3ch0"
 
 var api *twitter.Api
 var r *rand.Rand
@@ -15,8 +15,8 @@ var done chan bool
 func main() {
 	api = twitter.NewApi()
 	done = make(chan bool)
-	r = rand.New(rand.NewSource(time.Now()))
-	crawl(kStart, 0)
+	r = rand.New(rand.NewSource(time.Now().Unix()))
+	go crawl(kStart, 0)
 	<-done
 }
 
@@ -44,7 +44,6 @@ func crawl(userName string, level int) {
 		done <- true
 		return
 	}
-
 	rVal := r.Intn(length - 1)
 	// Choose a random friend for the next user
 	nextUser := friends[rVal].GetScreenName()
